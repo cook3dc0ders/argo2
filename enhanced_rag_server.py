@@ -16,6 +16,31 @@ import numpy as np
 from sqlalchemy import create_engine, text
 from transformers import pipeline
 import math
+import os
+from pathlib import Path
+
+# Database configuration for Railway
+DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:ewDINJqsTPPORxhBaUgPbPJQqEKPWpWP@shuttle.proxy.rlwy.net:35260/railway")
+
+# If DATABASE_URL uses postgres:// (Railway sometimes does this), convert to postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# Parse the DATABASE_URL for the PG dictionary
+from urllib.parse import urlparse
+parsed = urlparse(DATABASE_URL)
+
+PG = {
+    'user': parsed.username,
+    'password': parsed.password,
+    'host': parsed.hostname,
+    'port': parsed.port or 5432,
+    'db': parsed.path[1:]  # Remove leading slash
+}
+
+# Other configurations
+PARQUET_DIR = Path("./parquet_store")
+CHROMA_DIR = Path("./chroma_db")
 
 app = FastAPI(title="Enhanced Argo RAG Server", version="2.0.0")
 
@@ -543,3 +568,4 @@ if __name__ == "__main__":
     print("Features: Geographic filtering, Free LLM, Large dataset optimization")
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port, reload=True)
+
