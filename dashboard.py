@@ -13,20 +13,8 @@ import json
 from pathlib import Path
 from config import PARQUET_DIR
 
-# Configuration - Production deployment ready
-import os
-
-# Get API URL from Streamlit secrets or environment
-try:
-    # Streamlit Cloud secrets
-    API_URL = st.secrets["API_URL"]
-    st.sidebar.success("🔗 Connected to production backend")
-except (KeyError, AttributeError, FileNotFoundError):
-    # Environment variable or local fallback
-    API_URL = os.environ.get("API_URL", "http://localhost:8000")
-    if "localhost" in API_URL:
-        st.sidebar.warning("⚠️ Using localhost - switch to production backend URL")
-
+# Configuration
+API_URL = "http://localhost:8000"
 REQUEST_TIMEOUT = 30
 
 # Page configuration
@@ -36,177 +24,17 @@ st.set_page_config(
     page_icon="🌊"
 )
 
-# Custom CSS for white and blue color scheme - Force white background
+# Custom CSS for better appearance
 st.markdown("""
 <style>
-    /* Force white background for entire app */
-    .stApp {
-        background-color: white !important;
-    }
-    
-    /* Main content area */
-    .main .block-container {
-        background-color: white !important;
-        color: #333333 !important;
-    }
-    
-    /* Sidebar styling - white with blue accents */
-    .css-1d391kg, .css-1cypcdb, .sidebar .sidebar-content {
-        background-color: white !important;
-        border-right: 2px solid #0066cc !important;
-    }
-    
-    /* All text should be dark on white background */
-    .stApp, .stApp * {
-        background-color: white !important;
-        color: #333333 !important;
-    }
-    
     .main-header {
         font-size: 2.5rem;
-        color: #0066cc !important;
+        color: #1f77b4;
         text-align: center;
         margin-bottom: 2rem;
-        font-weight: bold;
-        background-color: white !important;
     }
-    
-    /* Button styling */
-    .stButton > button {
-        background-color: #0066cc !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 5px;
-        font-weight: bold;
-    }
-    
-    .stButton > button:hover {
-        background-color: #004499 !important;
-        color: white !important;
-    }
-    
-    /* Headers */
-    h1, h2, h3, h4, h5, h6 {
-        color: #0066cc !important;
-        background-color: white !important;
-    }
-    
-    /* Input fields */
-    .stTextInput > div > div > input {
-        background-color: white !important;
-        color: #333333 !important;
-        border: 1px solid #0066cc !important;
-    }
-    
-    /* Slider */
-    .stSlider > div > div > div {
-        color: #0066cc !important;
-    }
-    
-    /* Selectbox */
-    .stSelectbox > div > div > div {
-        background-color: white !important;
-        color: #333333 !important;
-        border: 1px solid #0066cc !important;
-    }
-    
-    /* Info boxes */
-    .stInfo {
-        background-color: #e6f3ff !important;
-        border-left: 4px solid #0066cc !important;
-        color: #333333 !important;
-    }
-    
-    /* Success boxes */
-    .stSuccess {
-        background-color: #e6f9ff !important;
-        border-left: 4px solid #0088ff !important;
-        color: #333333 !important;
-    }
-    
-    /* Error boxes */
-    .stError {
-        background-color: #ffe6e6 !important;
-        border-left: 4px solid #cc0000 !important;
-        color: #333333 !important;
-    }
-    
-    /* Warning boxes */
-    .stWarning {
-        background-color: #fff8e6 !important;
-        border-left: 4px solid #ffaa00 !important;
-        color: #333333 !important;
-    }
-    
-    /* Metric styling */
-    .css-1xarl3l, .css-1wivap2 {
-        background-color: #e6f3ff !important;
+    .stAlert > div {
         padding: 1rem;
-        border-radius: 5px;
-        border-left: 4px solid #0066cc !important;
-        margin: 0.5rem 0;
-        color: #333333 !important;
-    }
-    
-    /* Dataframe styling */
-    .stDataFrame {
-        border: 1px solid #cce6ff !important;
-        background-color: white !important;
-    }
-    
-    .stDataFrame table {
-        background-color: white !important;
-        color: #333333 !important;
-    }
-    
-    /* Expander styling */
-    .streamlit-expanderHeader {
-        background-color: #f0f8ff !important;
-        color: #0066cc !important;
-    }
-    
-    .streamlit-expanderContent {
-        background-color: white !important;
-        color: #333333 !important;
-    }
-    
-    /* Code blocks */
-    .stCode {
-        background-color: #f8f9fa !important;
-        border: 1px solid #e9ecef !important;
-        color: #333333 !important;
-    }
-    
-    /* Divider */
-    .css-1r6slb0 {
-        border-color: #0066cc !important;
-    }
-    
-    /* Checkbox */
-    .stCheckbox {
-        color: #333333 !important;
-    }
-    
-    /* Spinner */
-    .stSpinner {
-        color: #0066cc !important;
-    }
-    
-    /* Override any remaining dark elements */
-    div[data-testid="stSidebar"] {
-        background-color: white !important;
-        border-right: 2px solid #0066cc !important;
-    }
-    
-    div[data-testid="stSidebar"] * {
-        color: #333333 !important;
-    }
-    
-    /* Force white background on all containers */
-    div[data-testid="stVerticalBlock"], 
-    div[data-testid="stHorizontalBlock"],
-    div[data-testid="column"] {
-        background-color: white !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -234,34 +62,23 @@ with st.sidebar:
     # System status
     st.header("📊 System Status")
     
-    # Check API health - Demo mode for SIH presentation
-    demo_mode = st.sidebar.checkbox("🎬 Demo Mode (for SIH presentation)")
-    
-    if demo_mode:
-        st.success("✅ RAG Server Online (Demo Mode)")
-        with st.expander("View Details"):
-            st.write("**Database:** PostgreSQL (Connected)")
-            st.write("**Embeddings:** OpenAI text-embedding-3-small")
-            st.write("**OpenAI:** GPT-4 (Active)")
-        st.metric("Total Profiles", "15,847")
-        st.write("**Date Range:** 2020-01-01 to 2024-09-01")
-    else:
-        try:
-            health_resp = requests.get(f"{API_URL}/health", timeout=5)
-            if health_resp.status_code == 200:
-                health_data = health_resp.json()
-                st.success("✅ RAG Server Online")
-                
-                # Show detailed status
-                with st.expander("View Details"):
-                    st.write(f"**Database:** {health_data.get('database', 'unknown')}")
-                    st.write(f"**Embeddings:** {health_data.get('embeddings', 'unknown')}")
-                    st.write(f"**OpenAI:** {health_data.get('openai', 'unknown')}")
-            else:
-                st.error("❌ RAG Server Error")
-        except requests.exceptions.RequestException:
-            st.error("❌ RAG Server Offline")
-            st.info("Enable Demo Mode for SIH presentation, or start the backend server")
+    # Check API health
+    try:
+        health_resp = requests.get(f"{API_URL}/health", timeout=5)
+        if health_resp.status_code == 200:
+            health_data = health_resp.json()
+            st.success("✅ RAG Server Online")
+            
+            # Show detailed status
+            with st.expander("View Details"):
+                st.write(f"**Database:** {health_data.get('database', 'unknown')}")
+                st.write(f"**Embeddings:** {health_data.get('embeddings', 'unknown')}")
+                st.write(f"**OpenAI:** {health_data.get('openai', 'unknown')}")
+        else:
+            st.error("❌ RAG Server Error")
+    except requests.exceptions.RequestException:
+        st.error("❌ RAG Server Offline")
+        st.info("Make sure to run: `uvicorn rag_server:app --reload --port 8000`")
     
     # Try to get stats
     try:
@@ -368,12 +185,12 @@ if "last_query" in st.session_state:
         if not map_df.empty:
             st.subheader("🗺️ Geographic Distribution")
             
-            # Create map layer with blue color scheme
+            # Create map layer
             layer = pdk.Layer(
                 "ScatterplotLayer",
                 data=map_df.rename(columns={"Latitude": "lat", "Longitude": "lon"}),
                 get_position=["lon", "lat"],
-                get_fill_color=[0, 102, 204, 200],  # Blue color
+                get_fill_color=[255, 100, 100, 200],
                 get_radius=50000,
                 pickable=True,
                 filled=True
@@ -415,14 +232,14 @@ if "last_query" in st.session_state:
                     # Load parquet data
                     dfp = pd.read_parquet(parquet_path)
                     
-                    # Create subplot for temperature and salinity with blue theme
+                    # Create subplot for temperature and salinity
                     fig = make_subplots(
                         rows=1, cols=2,
                         subplot_titles=("Temperature Profile", "Salinity Profile"),
                         specs=[[{"secondary_y": False}, {"secondary_y": False}]]
                     )
                     
-                    # Temperature plot (blue gradient)
+                    # Temperature plot
                     if "TEMP" in dfp.columns and "PRES" in dfp.columns:
                         temp_data = dfp[["TEMP", "PRES"]].dropna()
                         if not temp_data.empty:
@@ -432,13 +249,13 @@ if "last_query" in st.session_state:
                                     y=temp_data["PRES"],
                                     mode="lines+markers",
                                     name="Temperature",
-                                    line=dict(color="#0066cc", width=2),
-                                    marker=dict(size=4, color="#0088ff")
+                                    line=dict(color="red", width=2),
+                                    marker=dict(size=4)
                                 ),
                                 row=1, col=1
                             )
                     
-                    # Salinity plot (darker blue)
+                    # Salinity plot
                     if "PSAL" in dfp.columns and "PRES" in dfp.columns:
                         sal_data = dfp[["PSAL", "PRES"]].dropna()
                         if not sal_data.empty:
@@ -448,31 +265,24 @@ if "last_query" in st.session_state:
                                     y=sal_data["PRES"],
                                     mode="lines+markers",
                                     name="Salinity",
-                                    line=dict(color="#004499", width=2),
-                                    marker=dict(size=4, color="#0066cc")
+                                    line=dict(color="blue", width=2),
+                                    marker=dict(size=4)
                                 ),
                                 row=1, col=2
                             )
                     
-                    # Update layout with blue theme
+                    # Update layout
                     fig.update_layout(
                         title=f"Profile Data: {selected_profile}",
-                        title_font=dict(color="#0066cc", size=16),
                         height=600,
-                        showlegend=False,
-                        plot_bgcolor="white",
-                        paper_bgcolor="white"
+                        showlegend=False
                     )
                     
-                    # Update axes with blue colors
-                    fig.update_yaxes(title_text="Pressure (dbar)", autorange="reversed", row=1, col=1,
-                                   title_font=dict(color="#0066cc"), tickfont=dict(color="#0066cc"))
-                    fig.update_yaxes(title_text="Pressure (dbar)", autorange="reversed", row=1, col=2,
-                                   title_font=dict(color="#0066cc"), tickfont=dict(color="#0066cc"))
-                    fig.update_xaxes(title_text="Temperature (°C)", row=1, col=1,
-                                   title_font=dict(color="#0066cc"), tickfont=dict(color="#0066cc"))
-                    fig.update_xaxes(title_text="Salinity (PSU)", row=1, col=2,
-                                   title_font=dict(color="#0066cc"), tickfont=dict(color="#0066cc"))
+                    # Update axes
+                    fig.update_yaxes(title_text="Pressure (dbar)", autorange="reversed", row=1, col=1)
+                    fig.update_yaxes(title_text="Pressure (dbar)", autorange="reversed", row=1, col=2)
+                    fig.update_xaxes(title_text="Temperature (°C)", row=1, col=1)
+                    fig.update_xaxes(title_text="Salinity (PSU)", row=1, col=2)
                     
                     st.plotly_chart(fig, use_container_width=True)
                     
@@ -601,6 +411,6 @@ with st.expander("❓ Help & Troubleshooting"):
 # Footer
 st.markdown("---")
 st.markdown(
-    "🌊 **ARGO RAG PoC** | Built for SIH 2024 | "
-    "Oceanographic Data Analysis Platform"
+    "🌊 **ARGO RAG PoC** | Built with Streamlit, FastAPI, and ChromaDB | "
+    "For production use, consider scaling tips in the documentation."
 )
