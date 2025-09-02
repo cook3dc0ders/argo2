@@ -26,4 +26,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import requests; requests.get('http://localhost:'+str(__import__('os').environ.get('PORT', '8000'))+'/health')" || exit 1
 
 # Command to run the application
-CMD ["sh", "-c", "uvicorn rag_server:app --host 0.0.0.0 --port ${PORT:-8000}"]
+
+CMD ["sh", "-c", "uvicorn enhanced_rag_server:app --host 0.0.0.0 --port $PORT"]
