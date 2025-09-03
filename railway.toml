@@ -1,8 +1,10 @@
+# railway.toml
+# Configuration for Railway deployment
+
 [build]
-builder = "dockerfile"
-dockerfile = "Dockerfile"
+builder = "NIXPACKS"
 
 [deploy]
-startCommand = "uvicorn rag_server:app --host 0.0.0.0 --port $PORT"
-restartPolicyType = "on_failure"
+startCommand = "uvicorn cloud_api:app --host 0.0.0.0 --port $PORT"
+restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
