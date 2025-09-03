@@ -1,0 +1,21 @@
+# Cloud deployment requirements - optimized for free tiers
+# Keep this minimal to reduce build times and memory usage
+
+# Core web framework
+streamlit>=1.28.0
+requests>=2.31.0
+
+# Data processing (essential only)
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Visualization
+plotly>=5.15.0
+pydeck>=0.8.0
+
+# Database (lightweight)
+psycopg2-binary>=2.9.7
+sqlalchemy>=2.0.0
+
+# Optional: For local data fallback
+PyYAML>=6.0
