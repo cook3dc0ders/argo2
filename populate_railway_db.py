@@ -280,4 +280,17 @@ def populate_database(database_url):
                 print(f"  {row[0]}: {row[1]:.1f}°N, {row[2]:.1f}°E, {row[3]} variables")
         
         conn.close()
-        print("\n
+        print("\n✅ Database population completed successfully!")
+        print("\nNext steps:")
+        print("1. Test your API at: https://your-api.railway.app/stats")
+        print("2. Deploy your Streamlit frontend")
+        print("3. Verify end-to-end functionality")
+        
+    except Exception as e:
+        print(f"❌ Error populating database: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    database_url = get_database_url()
+    print(f"Using database URL: {database_url[:50]}...")
+    populate_database(database_url)
