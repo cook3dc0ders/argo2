@@ -1,6 +1,10 @@
 # Cloud deployment requirements - optimized for free tiers
 # Keep this minimal to reduce build times and memory usage
+fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
+psycopg2-binary>=2.9.7
+pydantic>=2.0.0
+python-multipart>=0.0.6
 
 # Core web framework
 streamlit>=1.28.0
