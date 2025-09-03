@@ -1,0 +1,87 @@
+{
+  "profiles": [
+    {
+      "profile_id": "demo_profile_001",
+      "float_id": "1901393",
+      "lat": 35.5,
+      "lon": -75.2,
+      "time": "2023-06-15T12:00:00",
+      "n_levels": 50,
+      "variables": ["TEMP", "PSAL", "DOXY"],
+      "region": "North Atlantic",
+      "max_depth": 2000,
+      "temperature_range": "2.5-25.3°C",
+      "salinity_range": "34.2-36.8 PSU"
+    },
+    {
+      "profile_id": "demo_profile_002",
+      "float_id": "1901394",
+      "lat": 0.5,
+      "lon": -25.0,
+      "time": "2023-07-01T06:00:00",
+      "n_levels": 75,
+      "variables": ["TEMP", "PSAL"],
+      "region": "Equatorial Atlantic",
+      "max_depth": 1800,
+      "temperature_range": "4.1-28.7°C",
+      "salinity_range": "34.9-36.1 PSU"
+    },
+    {
+      "profile_id": "demo_profile_003",
+      "float_id": "1901395",
+      "lat": 25.2,
+      "lon": 65.8,
+      "time": "2023-07-15T18:30:00",
+      "n_levels": 60,
+      "variables": ["TEMP", "PSAL", "DOXY", "CHLA"],
+      "region": "Arabian Sea",
+      "max_depth": 1500,
+      "temperature_range": "15.2-29.1°C",
+      "salinity_range": "35.1-36.9 PSU"
+    },
+    {
+      "profile_id": "demo_profile_004",
+      "float_id": "1901396",
+      "lat": -20.3,
+      "lon": 57.5,
+      "time": "2023-08-10T09:45:00",
+      "n_levels": 80,
+      "variables": ["TEMP", "PSAL", "DOXY", "NITRATE"],
+      "region": "Indian Ocean",
+      "max_depth": 2200,
+      "temperature_range": "3.8-26.9°C",
+      "salinity_range": "34.5-35.2 PSU"
+    },
+    {
+      "profile_id": "demo_profile_005",
+      "float_id": "1901397",
+      "lat": 45.7,
+      "lon": -30.1,
+      "time": "2023-09-05T14:20:00",
+      "n_levels": 65,
+      "variables": ["TEMP", "PSAL", "DOXY", "CHLA", "BBP"],
+      "region": "North Atlantic Gyre",
+      "max_depth": 1900,
+      "temperature_range": "8.2-22.1°C",
+      "salinity_range": "35.0-36.2 PSU"
+    }
+  ],
+  "metadata": {
+    "source": "ARGO Global Ocean Observing System",
+    "description": "Sample oceanographic profiles from ARGO floating sensors",
+    "last_updated": "2023-12-01T10:00:00Z",
+    "count": 5,
+    "variables_available": ["TEMP", "PSAL", "DOXY", "CHLA", "NITRATE", "BBP"],
+    "regions_covered": ["North Atlantic", "Equatorial Atlantic", "Arabian Sea", "Indian Ocean", "North Atlantic Gyre"],
+    "time_range": {
+      "start": "2023-06-15T12:00:00",
+      "end": "2023-09-05T14:20:00"
+    },
+    "coordinate_bounds": {
+      "lat_min": -20.3,
+      "lat_max": 45.7,
+      "lon_min": -75.2,
+      "lon_max": 65.8
+    }
+  }
+}
