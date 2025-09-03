@@ -84,14 +84,14 @@ st.markdown("""
         box-shadow: 0 12px 40px var(--shadow-color-light);
     }
     
-    .search-container {
-        background: linear-gradient(135deg, var(--card-background-light) 0%, #e3f2fd 100%);
-        border-radius: 20px;
-        padding: 2rem;
-        margin: 2rem 0;
-        border: 2px solid var(--border-color-light);
-        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
-    }
+    # .search-container {
+    #     background: linear-gradient(135deg, var(--card-background-light) 0%, #e3f2fd 100%);
+    #     border-radius: 20px;
+    #     padding: 2rem;
+    #     margin: 2rem 0;
+    #     border: 2px solid var(--border-color-light);
+    #     box-shadow: 0 8px 32px rgba(102, 126, 234, 0.1);
+    # }
     
     .ai-response {
         background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -623,7 +623,6 @@ with col3:
         search_query = "Southern Ocean characteristics"
         st.rerun()
 
-
 # Add constraint warning if needed
 if search_query and not is_argo_ocean_related(search_query):
     st.markdown('<div class="warning-box">', unsafe_allow_html=True)
@@ -635,10 +634,10 @@ if search_query and (search_button or 'search_results' not in st.session_state o
     with st.spinner("🤖 Your AI Oceanographer is analyzing the data..."):
         # Filter relevant profiles
         relevant_profiles = filter_profiles(all_profiles, search_query)
-
+        
         # Get AI analysis
         ai_response = call_ai_api(search_query, {"profiles": relevant_profiles, "metadata": data["metadata"]})
-
+        
         # Store in session state
         st.session_state['search_results'] = {
             'query': search_query,
@@ -652,37 +651,37 @@ if 'search_results' not in st.session_state:
     st.markdown('<div class="search-container" style="margin-top: 5rem;">', unsafe_allow_html=True)
     st.markdown("<h2 style='text-align: center;'>Welcome to the ARGO Ocean Data Explorer!</h2>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #6c757d;'>Your journey into the depths of ocean science begins here. Follow the steps below to explore.</p>", unsafe_allow_html=True)
-
+    
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown('<div class="info-card" style="text-align: center;">', unsafe_allow_html=True)
         st.markdown('<h3 style="color: var(--primary-color); font-weight: 500;">Step 1: Type a Query</h3>', unsafe_allow_html=True)
         st.markdown('<p>Use the search bar above to ask a question about ocean data.</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
-
+    
     with col2:
         st.markdown('<div class="info-card" style="text-align: center;">', unsafe_allow_html=True)
         st.markdown('<h3 style="color: var(--primary-color); font-weight: 500;">Step 2: Click Analyze</h3>', unsafe_allow_html=True)
         st.markdown('<p>Hit the **Analyze** button to get a detailed report.</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
-
+        
     with col3:
         st.markdown('<div class="info-card" style="text-align: center;">', unsafe_allow_html=True)
         st.markdown('<h3 style="color: var(--primary-color); font-weight: 500;">Step 3: View Results</h3>', unsafe_allow_html=True)
         st.markdown('<p>Explore interactive charts, maps, and AI insights below.</p>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
-
+    
     st.markdown('</div>', unsafe_allow_html=True)
 
 else:
     results = st.session_state['search_results']
-
+    
     # Check if this was a constrained query (non-ocean related)
     if not is_argo_ocean_related(results['query']):
         st.markdown('<div class="warning-box">', unsafe_allow_html=True)
         st.markdown(f"❌ **Query outside scope:** '{results['query']}'")
         st.markdown('</div>', unsafe_allow_html=True)
-
+        
         # AI Analysis Section - will show the constraint message
         st.markdown('<div class="ai-response">', unsafe_allow_html=True)
         st.markdown("## 🤖 **AI Oceanographer Response**")
@@ -692,30 +691,30 @@ else:
         st.markdown('<div class="success-box">', unsafe_allow_html=True)
         st.markdown(f"✅ **Analysis complete for:** '{results['query']}'")
         st.markdown('</div>', unsafe_allow_html=True)
-
+        
         # AI Analysis Section
         st.markdown('<div class="ai-response">', unsafe_allow_html=True)
         st.markdown("## 🧠 **Expert Analysis**")
         st.markdown(results['ai_analysis'])
         st.markdown('</div>', unsafe_allow_html=True)
-
+        
         # Beautiful Results Overview
         st.markdown("### 📊 **Data Summary**")
         col1, col2, col3, col4 = st.columns(4)
-
+        
         with col1:
             st.markdown('<div class="metric-container">', unsafe_allow_html=True)
             st.markdown(f'<div class="feature-icon">📍</div>', unsafe_allow_html=True)
             st.metric("Matching Profiles", len(results['profiles']))
             st.markdown('</div>', unsafe_allow_html=True)
-
+        
         with col2:
             regions = list(set(p.get("region", "Unknown") for p in results['profiles']))
             st.markdown('<div class="metric-container">', unsafe_allow_html=True)
             st.markdown(f'<div class="feature-icon">🌍</div>', unsafe_allow_html=True)
             st.metric("Ocean Regions", len(regions))
             st.markdown('</div>', unsafe_allow_html=True)
-
+        
         with col3:
             all_vars = set()
             for p in results['profiles']:
@@ -724,17 +723,17 @@ else:
             st.markdown(f'<div class="feature-icon">⚗️</div>', unsafe_allow_html=True)
             st.metric("Parameters", len(all_vars))
             st.markdown('</div>', unsafe_allow_html=True)
-
+        
         with col4:
             max_depth = max(p.get("max_depth", 0) for p in results['profiles'])
             st.markdown('<div class="metric-container">', unsafe_allow_html=True)
             st.markdown(f'<div class="feature-icon">🏔️</div>', unsafe_allow_html=True)
             st.metric("Max Depth", f"{max_depth}m")
             st.markdown('</div>', unsafe_allow_html=True)
-
+        
         # Enhanced Results Tabs
         tab1, tab2, tab3, tab4 = st.tabs(["📈 **Visualizations**", "🗺️ **Geographic Map**", "📋 **Profile Details**", "🔬 **Scientific Context**"])
-
+        
         with tab1:
             st.markdown("### 📊 **Comprehensive Oceanographic Analysis**")
             if results['profiles']:
@@ -745,9 +744,9 @@ else:
                     specs=[[{"secondary_y": True}, {"secondary_y": True}],
                            [{"secondary_y": True}, {"type": "domain"}]]
                 )
-
+                
                 colors = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']
-
+                
                 # Plot depth profiles for each matching profile
                 for i, profile in enumerate(results['profiles'][:5]):  # Limit to 5 for readability
                     if 'depth_profile' in profile:
@@ -755,22 +754,22 @@ else:
                         temps = profile['depth_profile'].get('temperature', [])
                         sals = profile['depth_profile'].get('salinity', [])
                         oxygens = profile['depth_profile'].get('oxygen', [])
-
+                        
                         color = colors[i % len(colors)]
                         name = f"{profile['region']}"
-
+                        
                         if temps:
                             fig.add_trace(go.Scatter(
-                                x=temps, y=depths,
-                                name=name,
+                                x=temps, y=depths, 
+                                name=name, 
                                 line=dict(color=color, width=3),
                                 mode='lines+markers',
                                 marker=dict(size=6)
                             ), row=1, col=1)
                         if sals:
                             fig.add_trace(go.Scatter(
-                                x=sals, y=depths,
-                                name=name,
+                                x=sals, y=depths, 
+                                name=name, 
                                 line=dict(color=color, width=3),
                                 mode='lines+markers',
                                 marker=dict(size=6),
@@ -778,28 +777,28 @@ else:
                             ), row=1, col=2)
                         if oxygens:
                             fig.add_trace(go.Scatter(
-                                x=oxygens, y=depths,
-                                name=name,
+                                x=oxygens, y=depths, 
+                                name=name, 
                                 line=dict(color=color, width=3),
                                 mode='lines+markers',
                                 marker=dict(size=6),
                                 showlegend=False
                             ), row=2, col=1)
-
+                
                 # Beautiful regional distribution pie chart
                 region_counts = {}
                 for profile in results['profiles']:
                     region = profile.get('region', 'Unknown')
                     region_counts[region] = region_counts.get(region, 0) + 1
-
+                
                 fig.add_trace(go.Pie(
-                    labels=list(region_counts.keys()),
-                    values=list(region_counts.values()),
+                    labels=list(region_counts.keys()), 
+                    values=list(region_counts.values()), 
                     name="Regions",
                     marker=dict(colors=colors),
                     textinfo='label+percent'
                 ), row=2, col=2)
-
+                
                 # Update layout with beautiful styling
                 fig.update_yaxes(title_text="Depth (m)", autorange="reversed", row=1, col=1)
                 fig.update_yaxes(title_text="Depth (m)", autorange="reversed", row=1, col=2)
@@ -807,9 +806,9 @@ else:
                 fig.update_xaxes(title_text="Temperature (°C)", row=1, col=1)
                 fig.update_xaxes(title_text="Salinity (PSU)", row=1, col=2)
                 fig.update_xaxes(title_text="Oxygen (µmol/kg)", row=2, col=1)
-
+                
                 fig.update_layout(
-                    height=800,
+                    height=800, 
                     showlegend=True,
                     title_text="Oceanographic Data Analysis",
                     font=dict(family="Inter, sans-serif", size=12),
@@ -817,7 +816,7 @@ else:
                     paper_bgcolor='rgba(0,0,0,0)'
                 )
                 st.plotly_chart(fig, use_container_width=True)
-
+        
         with tab2:
             st.markdown("### 🗺️ **Global Distribution of ARGO Profiles**")
             if results['profiles']:
@@ -833,12 +832,12 @@ else:
                         'variables': ', '.join(profile['variables']),
                         'quality': profile['data_quality']
                     })
-
+                
                 df_map = pd.DataFrame(map_data)
-
+                
                 fig = px.scatter_mapbox(
-                    df_map,
-                    lat='lat',
+                    df_map, 
+                    lat='lat', 
                     lon='lon',
                     hover_data=['region', 'float_id', 'max_depth', 'variables', 'quality'],
                     color='region',
@@ -855,23 +854,23 @@ else:
                     paper_bgcolor='rgba(0,0,0,0)'
                 )
                 st.plotly_chart(fig, use_container_width=True)
-
+        
         with tab3:
             st.markdown("### 📋 **Detailed Profile Information**")
             # Beautiful profile cards
             for i, profile in enumerate(results['profiles']):
                 with st.expander(f"🌊 **{profile['region']}** - Float {profile['float_id']} ({profile['time'][:10]})"):
                     st.markdown('<div class="profile-card">', unsafe_allow_html=True)
-
+                    
                     col1, col2, col3 = st.columns(3)
-
+                    
                     with col1:
                         st.markdown("**📍 Location & Time**")
                         st.write(f"🌐 Latitude: **{profile['lat']}°**")
-                        st.write(f"🌐 Longitude: **{profile['lon']}°**")
+                        st.write(f"🌐 Longitude: **{profile['lon']}°**") 
                         st.write(f"📅 Date: **{profile['time'][:10]}**")
                         st.write(f"🌊 Region: **{profile['region']}**")
-
+                    
                     with col2:
                         st.markdown("**⚗️ Measurements**")
                         st.write(f"📊 Variables: **{', '.join(profile['variables'])}**")
@@ -879,7 +878,7 @@ else:
                         st.write(f"🏔️ Max depth: **{profile['max_depth']}m**")
                         quality_class = "status-excellent" if profile['data_quality'] == 'excellent' else "status-good"
                         st.markdown(f"✅ Data quality: <span class='{quality_class}'>{profile['data_quality']}</span>", unsafe_allow_html=True)
-
+                    
                     with col3:
                         st.markdown("**📈 Parameter Ranges**")
                         if 'temperature_range' in profile:
@@ -888,34 +887,34 @@ else:
                             st.write(f"🧂 Salinity: **{profile['salinity_range']}**")
                         if 'oxygen_range' in profile:
                             st.write(f"💨 Oxygen: **{profile['oxygen_range']}**")
-
+                    
                     if 'special_features' in profile:
                         st.markdown("**🌟 Special Features:**")
                         features_text = ", ".join([f"**{feature}**" for feature in profile['special_features']])
                         st.markdown(features_text)
-
+                    
                     st.markdown('</div>', unsafe_allow_html=True)
-
+        
         with tab4:
             st.markdown("### 🔬 **Scientific Context & Interpretation**")
-
+            
             # Beautiful summary statistics
             if results['profiles']:
                 st.markdown('<div class="info-card">', unsafe_allow_html=True)
-
+                
                 all_regions = [p['region'] for p in results['profiles']]
                 all_variables = []
                 for p in results['profiles']:
                     all_variables.extend(p['variables'])
-
+                
                 col1, col2 = st.columns(2)
-
+                
                 with col1:
                     st.markdown("**🌍 Regional Coverage:**")
                     region_summary = pd.Series(all_regions).value_counts()
                     for region, count in region_summary.items():
                         st.write(f"🌊 **{region}**: {count} profile{'s' if count > 1 else ''}")
-
+                
                 with col2:
                     st.markdown("**⚗️ Parameter Frequency:**")
                     var_summary = pd.Series(all_variables).value_counts()
@@ -923,11 +922,11 @@ else:
                     for var, count in var_summary.items():
                         icon = param_icons.get(var, '📊')
                         st.write(f"{icon} **{var}**: {count} profile{'s' if count > 1 else ''}")
-
+                
                 st.markdown('</div>', unsafe_allow_html=True)
-
+            
             st.markdown("### 🌊 **Key Oceanographic Insights**")
-
+            
             st.markdown('<div class="info-card">', unsafe_allow_html=True)
             st.markdown("""
             **🌡️ Temperature Profiles** reveal thermocline structure and mixed layer depth variations across different ocean regions.
@@ -948,24 +947,24 @@ else:
 with st.sidebar:
     st.markdown('<div class="sidebar-section">', unsafe_allow_html=True)
     st.markdown("## 🌊 **System Overview**")
-
+    
     total_profiles = len(all_profiles)
     st.metric("📍 **Total Profiles**", total_profiles)
-
+    
     regions = list(set(p['region'] for p in all_profiles))
     st.metric("🌍 **Ocean Regions**", len(regions))
-
+    
     all_vars = set()
     for p in all_profiles:
         all_vars.update(p['variables'])
     st.metric("⚗️ **Parameters**", len(all_vars))
     st.markdown('</div>', unsafe_allow_html=True)
-
+    
     st.markdown('<div class="sidebar-section">', unsafe_allow_html=True)
     st.markdown("## 🤖 **AI-Powered Analysis**")
     st.info("This dashboard uses advanced AI to provide expert oceanographic interpretations of ARGO float data with scientific accuracy.")
     st.markdown('</div>', unsafe_allow_html=True)
-
+    
     st.markdown('<div class="sidebar-section">', unsafe_allow_html=True)
     st.markdown("## 📖 **About ARGO**")
     st.markdown("""
@@ -979,7 +978,7 @@ with st.sidebar:
     • 🔄 Continuous monitoring cycle
     """)
     st.markdown('</div>', unsafe_allow_html=True)
-
+    
     st.markdown('<div class="sidebar-section">', unsafe_allow_html=True)
     st.markdown("## 🔬 **What You Can Explore**")
     st.success("""
@@ -991,7 +990,7 @@ with st.sidebar:
     • Ocean circulation patterns
     • Climate change indicators
     """)
-
+    
     st.error("""
     **❌ Not Supported:**
     • Weather/meteorology
@@ -1012,7 +1011,7 @@ st.markdown("""
         position: absolute;
         width: 100%;
         height: 100%;
-        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill-opacity='0.03'%3E%3Cpolygon fill='%23000' points='50 0 60 40 100 50 60 60 50 100 40 60 0 50 40 40'/%3E%3C/g%3E%3C/svg%3E") repeat;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill-opacity='0.03'%3E%3Cpolygon fill='%23000' points='50 0 60 40 100 50 60 60 50 100 40 60 0 50 40 40'/%3E%3E%3C/g%3E%3C/svg%3E") repeat;
         animation: float 20s ease-in-out infinite;
     '></div>
 </div>
