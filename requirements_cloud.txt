@@ -1,5 +1,6 @@
 # Cloud deployment requirements - optimized for free tiers
 # Keep this minimal to reduce build times and memory usage
+uvicorn[standard]>=0.24.0
 
 # Core web framework
 streamlit>=1.28.0
